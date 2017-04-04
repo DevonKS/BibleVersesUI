@@ -1,14 +1,6 @@
-# bible-verses
+# Bible Verses
 
-A Clojure library designed to ... well, that part is up to you.
+A mobile application written in clojurescript to display and search a list of bible verses.
 
-## Usage
 
-FIXME
 
-## License
-
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
