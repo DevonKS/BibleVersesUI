@@ -4,7 +4,15 @@
 
 (defonce app-state (atom {:app/msg "Hello Clojure in iOS and Android!"
                           :app/toolbar {:toolbar/title "Bible Verses"
-                                        :toolbar/search-text "Testing"}}))
+                                        :toolbar/search-text "Testing"}
+                          :app/list {:list/list-items [{:leftElement "person"
+                                                        :centerElement {:primaryText "Center element as an object"
+                                                                        :secondaryText "Subtext"}
+                                                        :rightElement "info"}
+                                                       {:leftElement "person"
+                                                        :centerElement {:primaryText "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                                                                        :secondaryText "Pellentesque commodo ultrices diam. Praesent in ipsum"}
+                                                        :rightElement "info"}]}}))
 
 (defmulti read om/dispatch)
 (defmethod read :default

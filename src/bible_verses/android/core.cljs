@@ -2,7 +2,8 @@
   (:require [om.next :as om :refer-macros [defui]]
             [re-natal.support :as sup]
             [bible-verses.state :as state]
-            [bible-verses.android.components.toolbar :as toolbar]))
+            [bible-verses.android.components.toolbar :as toolbar]
+            [bible-verses.android.components.my-list :as my-list]))
 
 (set! js/window.React (js/require "react"))
 (def ReactNative (js/require "react-native"))
@@ -31,20 +32,14 @@
 (defui AppRoot
        static om/IQuery
        (query [this]
-              '[:app/msg :app/toolbar])
+              '[:app/toolbar :app/list])
        Object
        (render [this]
-               (let [{msg :app/msg toolbar-props :app/toolbar} (om/props this)]
+               (let [{toolbar-props :app/toolbar list-props :app/list} (om/props this)]
                  (theme-provider {:uiTheme ui-theme}
                                  (view {}
                                        (toolbar/toolbar toolbar-props)
-                                       (view {:style {:flexDirection "column" :margin 40 :alignItems "center"}}
-                                        (text {:style {:fontSize 30 :fontWeight "100" :marginBottom 20 :textAlign "center"}} msg)
-                                        (image {:source logo-img
-                                                :style  {:width 80 :height 80 :marginBottom 30}})
-                                        (touchable-highlight {:style   {:backgroundColor "#999" :padding 10 :borderRadius 5}
-                                                              :onPress #(alert "HELLO!")}
-                                                             (text {:style {:color "white" :textAlign "center" :fontWeight "bold"}} "press me"))))))))
+                                       (my-list/my-list list-props toolbar-props))))))
 
 (defonce RootNode (sup/root-node! 1))
 (defonce app-root (om/factory RootNode))
