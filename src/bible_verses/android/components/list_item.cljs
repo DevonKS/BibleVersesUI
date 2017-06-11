@@ -15,18 +15,22 @@
   (.alert (.-Alert ReactNative) title))
 
 (defui ListItem
+  static om/Ident
+  (ident [this {:keys [db/id]}]
+         [:item/by-id id])
+
   static om/IQuery
   (query [this]
-         '[:left-element :center-element :right-element])
+         '[:db/id :left-element :center-element :right-element])
 
   Object
   (render [this]
-          (let [{:keys [:left-element :center-element :right-element]} (om/props this)]
+          (let [{:keys [:leftElement :centerElement :rightElement]} (om/props this)]
             (view {} ;; this empty view is required so that the items are displayed correctly
                   (material-ui-list-item {:divider true
-                                          :leftElement            left-element
-                                          :centerElement          center-element
-                                          :rightElement           right-element
+                                          :leftElement            leftElement
+                                          :centerElement          centerElement
+                                          :rightElement           rightElement
                                           :onLeftElementPress     #(alert "left element pressed")
                                           :onPress                #(alert "list element pressed")
                                           :onRightElementress     #(alert "Rigth element pressed")})))))

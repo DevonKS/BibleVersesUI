@@ -4,12 +4,14 @@
 
 (defonce app-state (atom {:app/msg "Hello Clojure in iOS and Android!"
                           :app/toolbar {:toolbar/title "Bible Verses"
-                                        :toolbar/search-text "Testing"}
-                          :app/list {:list/list-items [{:leftElement "person"
+                                        :toolbar/search-text ""}
+                          :app/list {:list/list-items [{:db/id 1
+                                                        :leftElement "person"
                                                         :centerElement {:primaryText "Center element as an object"
                                                                         :secondaryText "Subtext"}
                                                         :rightElement "info"}
-                                                       {:leftElement "person"
+                                                       {:db/id 2
+                                                        :leftElement "person"
                                                         :centerElement {:primaryText "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                                                                         :secondaryText "Pellentesque commodo ultrices diam. Praesent in ipsum"}
                                                         :rightElement "info"}]}}))
@@ -22,9 +24,20 @@
                         {:value v}
                         {:value :not-found})))
 
+
+(defmulti mutate om/dispatch)
+
+(defmethod mutate :default
+  [_ _ _] {:remote false})
+
+(defmethod mutate 'toolbar/change-searchtext
+  [{:keys [state]} _ {:keys [search-text]}]
+  {:value {:keys [:app/toolbar]}
+   :action #(swap! state assoc-in [:app/toolbar :toolbar/search-text] search-text)})
+
 (defonce reconciler
          (om/reconciler
            {:state        app-state
-            :parser       (om/parser {:read read})
+            :parser       (om/parser {:read read :mutate mutate})
             :root-render  sup/root-render
             :root-unmount sup/root-unmount}))

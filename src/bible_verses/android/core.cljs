@@ -20,6 +20,7 @@
 
 (def theme-provider (partial create-element (.-ThemeProvider ReactNativeMaterialUI)))
 (def color (.-COLOR ReactNativeMaterialUI))
+(def style {:container {:flex 1}})
 
 (def logo-img (js/require "./images/cljs.png"))
 
@@ -30,16 +31,23 @@
       (.alert (.-Alert ReactNative) title))
 
 (defui AppRoot
-       static om/IQuery
-       (query [this]
-              '[:app/toolbar :app/list])
-       Object
-       (render [this]
-               (let [{toolbar-props :app/toolbar list-props :app/list} (om/props this)]
-                 (theme-provider {:uiTheme ui-theme}
-                                 (view {}
-                                       (toolbar/toolbar toolbar-props)
-                                       (my-list/my-list list-props toolbar-props))))))
+  static om/IQueryParams
+  (params [this]
+          {:toolbar (om/get-query toolbar/Toolbar)
+           :list    (om/get-query my-list/MyList)})
+
+   static om/IQuery
+   (query [this]
+          '[{:app/toolbar ?toolbar} {:app/list ?list}])
+
+   Object
+   (render [this]
+           (let [{toolbar-props :app/toolbar list-props :app/list} (om/props this)]
+             (theme-provider {:uiTheme ui-theme}
+                             (view {:style (:container style)}
+                                   (toolbar/toolbar toolbar-props)
+                                   (my-list/my-list (merge list-props toolbar-props))
+                                   (text {} "Test"))))))
 
 (defonce RootNode (sup/root-node! 1))
 (defonce app-root (om/factory RootNode))
